@@ -1,0 +1,57 @@
+#Checking Performance on various sequences of inputs meant to check stability and correctness of the system
+
+
+1.) Incorrect inputs -:
+
+a.) Create Function -:
+No type of incorrect input can be generated which is incorrect only if you CREATE correctly whatever after the space becomes the filename untill the first whitespace . Case of writing incorrect inputs is dealt with else if statemtents and hence wont be dealt with ahead
+
+b.) Read Function -:
+
+Only incorrect input is when we try to read the file which is not present in the system in which case the code reflects it aptly 
+
+c.) Insert Function -:
+
+Only incorrect input is when we try to insert in a non existent file which is handled . In case of snapshotted files we are just copying the content of the snapshot file into its child and also appending with the given content.
+
+d.) History Function -:
+Again only incorrect input is when we try to read history of non existent file which is handled . Note that version history starts from 0 in the code !!
+
+e.) Update Function -:
+Only incorrect input is when the file does not exist which is handled . In case of snapshotted files new file is created hence everything is stable 
+
+f.) Recent_files function -:
+Only incorrect inputs are when val <= 0 and val > number of modifications both of which are handled 
+
+g.) Biggest Trees function - :
+Only incorrect inputs are same as recent files and hence are handled aptly .
+
+
+## The code works for all inputs 
+
+
+#Correctness of the code 
+a.) Create function - :
+The file with the filename persists in the system untill the code is running and all other functions can be run on the file with the filename at any instant of the time and hence create is correct 
+
+b.) Read Function -:
+In case of no content in the active version of the file we just return the blank line !!
+In all other cases read works fine since just returns the content of the active version 
+
+c.) Insert Function -:
+
+For snapshots we create a new version and this new version has content of the snapshot and the additional content that you give 
+For others just add the inputs !! 
+
+d.) Update function -:
+Same as insert
+
+
+e.) History Function -:
+Returns the snapshots with their timestamps starting from root and in the increaseing order of their version_ids  == timestamps
+
+f.) Recent_files and Biggest Trees work correctly since they just return the last_k biggest elements since they are based on max heaps .
+
+
+
+

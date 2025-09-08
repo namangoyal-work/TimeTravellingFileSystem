@@ -1,122 +1,111 @@
 #include <iostream>
+#include <vector>
 using namespace std;
-template<typename T , class C>
-class custom_heap{
-    private:
-    vector<pair<T , C> >  ar;
-    public  : 
-    custom_heap (){
-        vector<pair<T , C>> ar;
-    }
-    void insert(pair<T , C> p){
-        ar.push_back(p);
-        long long key = p.second;
-        long long index = ar.size() - 1;
-        long long parent = (ar.size() - 1) / 2;
-        while(ar[parent].second <  key ){
-            ar[index]= ar[parent];
-            ar[parent] = p;
-            index = parent;
-            parent = (index - 1) / 2;
+template<typename T, class C>
+class custom_heap {
+private:
+    vector<pair<T, C>> ar;
+
+    void heapify_down(long long index) {
+        long long size = ar.size();
+        long long largest = index;
+        long long left = 2 * index + 1;
+        long long right = 2 * index + 2;
+        
+        if (left < size && ar[left].second > ar[largest].second) {
+            largest = left;
         }
-
+        
+        if (right < size && ar[right].second > ar[largest].second) {
+            largest = right;
+        }
+        
+        if (largest != index) {
+            swap(ar[index], ar[largest]);
+            heapify_down(largest);
+        }
     }
 
+public:
+    custom_heap() {} // Empty constructor is enough
 
+    void insert(pair<T, C> p) {
+        ar.push_back(p);
+        long long index = ar.size() - 1;
+        
+        while (index > 0) {
+            long long parent = (index - 1) / 2;
+            if (ar[parent].second < ar[index].second) {
+                swap(ar[parent], ar[index]);
+                index = parent;
+            } else {
+                break;
+            }
+        }
+    }
 
-    //  Returns the largest k elements in the heap !!
-    vector<pair<T, C > > search(long long k){
-        vector<pair<T, C> > ans;
-        if (k == 0){return ans; }
-            while(k != 0 ){
-        k --;
-        ans.push_back(ar[0]);
-        ar[0 ]=  ar[ar.size() - 1];
-        ar[ar.size() - 1] = ans[ans.size() - 1];
-        ar.pop_back(); 
-        long long key = ar[0].second;
-        long long index = 0;
-        long long child1 = 2*index + 1 ;
-        long long child2 = 2*index + 2;
-        while(ar[child1].second >  key  || ar[child2].second  > key ){
-            if (ar[child1].second > ar[child2].second) {
-                pair<T,C> p2 = ar[child1];
-                ar[child1] = ar[index]; 
-                ar[index]= p2; 
-                index = child1;
+    vector<pair<T, C>> search(long long k) {
+        vector<pair<T, C>> result;
+        if (k == -1);{
+            k = ar.size();
+        }
+        if (ar.empty() || k <= 0) return result;
+        
+        // Limit k to array size
+        k = min(k, (long long)ar.size());
+        vector<pair<T, C>> temp = ar;
+        
+        for (long long i = 0; i < k; i++) {
+            if (temp.empty()) break;
+            
+            result.push_back(temp[0]);
+            temp[0] = temp.back();
+            temp.pop_back();
+            
+            if (!temp.empty()) {
+                // Heapify down the root
+                long long idx = 0;
+                long long size = temp.size();
                 
-
+                while (true) {
+                    long long largest = idx;
+                    long long left = 2 * idx + 1;
+                    long long right = 2 * idx + 2;
+                    
+                    if (left < size && temp[left].second > temp[largest].second)
+                        largest = left;
+                    
+                    if (right < size && temp[right].second > temp[largest].second)
+                        largest = right;
+                    
+                    if (largest == idx) break;
+                    
+                    swap(temp[idx], temp[largest]);
+                    idx = largest;
+                }
             }
-            else{
-                 pair<T,C> p2 = ar[child2];
-                ar[child2] = ar[index]; 
-                ar[index]= p2;
-                index = child2;
-            }
-            child1 = 2*index + 1;
-            child2 = 2*index + 2; 
-            
-            
-        }        
-        
-     }
-    for(long long i = 0 ; i  < ans.size() ; i ++ ){
-        // inserting the ith pair back to the heap 
-        pair<T , C>p  = ans[i]; 
-        ar.push_back(p);
-        long long key = p.second;
-        long long index = ar.size() - 1;
-        long long parent = (ar.size() - 1) / 2;
-        while(ar[parent].second <  key ){
-            ar[index]= ar[parent];
-            ar[parent] = p;
-            index = parent;
-            parent = (index - 1) / 2;
         }
-
-    }
-    return ans;
-
         
+        return result;
     }
-    vector<pair<T, C>> heapify(vector<pair<T , C>> ar){
-        long long index = ar.size() - 1;
-        while(index != 0){
-            long long copy_index = index;
-            long long child1 = 2*index + 1;
-            long long child2 = 2*index + 2;
-            while(child1 < ar.size()-  1 ){
-                long long mx = ar[child1].second;
-                if (child2 < ar.size() - 1) {
-                    mx = max(mx ,ar[child2].second);
 
-               }
-               if (mx > ar[child1].second){
-                // we are processing from child2 end ;
-                pair<T  ,C> temp = ar[child2];
-                ar[child2] = ar[index];
-                ar[index] = temp;
-                copy_index = child2;
-               }
-               else{
-                // we are processing from chil1d end !! 
-                pair<T  ,C> temp = ar[child1];
-                ar[child1] = ar[index];
-                ar[index] = temp;
-                copy_index = child1;
-               }
-               child1 = 2 * copy_index   +1;
-               child2 = 2 * copy_index  + 2;
-               
-               
-           
-               
-            }
-            index --;
+    void build_heap(custom_map<T, C>& mp) {
+        vector<pair<T, C>> pairs = mp.get_all_pairs();
+        ar = pairs;
+        
+        if (ar.empty()) return;
+        
+        for (long long i = (ar.size() / 2) - 1; i >= 0; i--) {
+            heapify_down(i);
         }
-        return ar;
-
     }
-
-
+    void build_heap(const vector<pair<T, C>>& pairs) {
+        ar = pairs;
+        
+        if (ar.empty()) return;
+        
+        for (long long i = (ar.size() / 2) - 1; i >= 0; i--) {
+            heapify_down(i);
+        }
+    }
 };
