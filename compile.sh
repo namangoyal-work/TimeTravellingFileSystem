@@ -82,12 +82,12 @@ while true; do
             fi
             ;;
         4)
-            # For now, opening main.cpp as placeholder for documentation
+            
             if [ -x "$(command -v code)" ]; then
-                code main.cpp
+                nano README.md
             else
-                echo -e "${RED}Error: VS Code not found. Opening with default editor.${NC}"
-                open main.cpp
+                echo -e "${RED}Error: nano not found. Opening with vim.${NC}"
+                vim README.md
             fi
             ;;
         5)
