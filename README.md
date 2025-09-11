@@ -2,7 +2,7 @@
 ## Code Functionality and Error Handling Per Operation :  <br>  
 
 ## Instructions for running the code : <br>
-Works only on macos , linux , Windows <br>
+Works only on macos , linux , Windows (might have compilation issues) <br>
 1.) just open up terminal and go to the folder where you have extracted the folder. Inside the folder open up terminal and type ./compile.sh(For mac and linux ) , For windows type ./compile.ps1 . <br>
 2.) Choose the option in terms of numbers that you want to run  and it should work automatically . <br>
 3.) Note that the documentation opens up this very document. <br>
