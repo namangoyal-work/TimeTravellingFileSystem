@@ -1,0 +1,6 @@
+create f1
+read f1
+history f1
+snapshot f1 
+insert f1 hello
+exit

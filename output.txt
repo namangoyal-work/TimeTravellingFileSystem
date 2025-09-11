@@ -1,0 +1,10 @@
+Welcome to the Time Travelling File System !! 
+The valid commands are : CREATE , READ , INSERT , UPDATE , SNAPSHOT , ROLLBACK , HISTORY , RECENT_FILES , BIGGEST_TREES 
+Please enter your commands below : 
+Please enter 'exit' to exit the program !! 
+Please enter your command : Please enter your command : 
+Please enter your command : Version_id Snapshot_time message
+0 Thu Sep 11 19:02:42 2025
+ First version of the file (marked as a snapshot by default)
+Please enter your command : This version is already a snapshot!
+Please enter your command : Please enter your command : 

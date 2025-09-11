@@ -1,5 +1,15 @@
 # TimeTravellingFileSystem <br>  
 ## Code Functionality and Error Handling Per Operation :  <br>  
+
+## Instructions for running the code : <br>
+Works only on macos , linux , Windows <br>
+1.) just open up terminal and go to the folder where you have extracted the folder. Inside the folder open up terminal and type ./compile.sh(For mac and linux ) , For windows type ./compile.ps1 . <br>
+2.) Choose the option in terms of numbers that you want to run  and it should work automatically . <br>
+3.) Note that the documentation opens up this very document. <br>
+4.) If you select option 2 then you will have to manually open the output.txt file to view the output file in your favourite text editor. <br>
+
+
+
 ### Create  :   <br>
 Error Handling :  <br>
 1.) If create is misspelled then it redirects to the start and says to you to type in only valid codes in any case you like all the cases are acceptable that is even inputs of the type CreAte is considered valid but the spelling should be correct.<br>
@@ -86,4 +96,4 @@ Behaviour: <br>
 Error handling is exactly identical to Recent Files <br>
 Behaviour of code : 
 Identical to recent files except that the files with the most number of versions are displayed in decreasing order of number of versions, Rest logic is identical to recent files just with the aforementioned slight modification . <br>
- 
+

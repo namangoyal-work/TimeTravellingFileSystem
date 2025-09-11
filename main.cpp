@@ -5,6 +5,7 @@
 #include"tree.hpp"
 #include"heap.hpp"
 #include<cctype>
+#include<algorithm>
 using namespace std;
 // Function to read a full line of input including spaces as a string
 // Filenames are not allowed to have spaces in them 

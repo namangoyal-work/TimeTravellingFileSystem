@@ -48,28 +48,45 @@ run() {
         return 1
     fi
 }
-
+run_with_io() {    if [ -f build/tfs ]; then
+        echo -e "${YELLOW}Running TTFS...${NC}"
+        echo
+        if [ ! -f input.txt ]; then
+            echo -e "${RED}Error: input.txt file not found. Please create an input.txt file with test cases.${NC}"
+            return 1
+        fi
+        ./build/tfs <input.txt >output.txt
+        echo -e "${GREEN}Output written to output.txt${NC}"
+        
+    else
+        echo -e "${RED}Error: Executable not found. Please compile first.${NC}"
+        return 1
+    fi
+    }
 # Main menu
 while true; do
     echo
     echo -e "${PURPLE}${BOLD}Please select an option:${NC}"
     echo -e "${PURPLE}1)${NC} Compile and Run"
-    echo -e "${PURPLE}2)${NC} Compile Only"
-    echo -e "${PURPLE}3)${NC} Run Existing Version"
-    echo -e "${PURPLE}4)${NC} Read Documentation"
-    echo -e "${PURPLE}5)${NC} Exit"
+    echo -e "${PURPLE}2)${NC} Compile and Run with custom input file name it ("input.txt" by without quotes) and get the output in a custom file name ("output.txt" by default) "
+    echo -e "${PURPLE}3)${NC} Compile Only"
+    echo -e "${PURPLE}4)${NC} Run Existing Version"
+    echo -e "${PURPLE}5)${NC} Read Documentation"
+    echo -e "${PURPLE}6)${NC} Exit"
     echo
-    read -p "Enter your choice (1-5): " choice
+    read -p "Enter your choice (1-6): " choice
     echo
 
     case $choice in
         1)
             compile && run
             ;;
-        2)
+        2) compile && run_with_io
+        ;; 
+        3)
             compile
             ;;
-        3)
+        4)
             echo -e "${YELLOW}Available versions:${NC}"
             ls -1 Version_History/
             echo
@@ -81,7 +98,7 @@ while true; do
                 echo -e "${RED}Error: Version not found${NC}"
             fi
             ;;
-        4)
+        5)
             
             if [ -x "$(command -v code)" ]; then
                 nano README.md
@@ -90,7 +107,7 @@ while true; do
                 vim README.md
             fi
             ;;
-        5)
+        6)
             echo -e "${GREEN}Thank you for using TTFS!${NC}"
             exit 0
             ;;
