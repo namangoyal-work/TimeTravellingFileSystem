@@ -45,8 +45,8 @@ public:
 template<typename K, typename V>
 class custom_map {
 private:
-    static const unsigned long long INITIAL_SIZE = 16;
-    static const unsigned long long PRIME_MOD = 1000000007;
+    static const unsigned long long INITIAL_SIZE = 16;  // same as g++ implementation of the hashmap 
+    static const unsigned long long PRIME_MOD = 1000000007; // chosen very near to 10^9 that is more than the max limit of storage that we are going to be using ! 
     HashNode<K,V>** buckets;
     unsigned long long size;
     unsigned long long capacity;
@@ -142,7 +142,7 @@ public:
             }
             current = current->get_next();
         }
-        throw runtime_error("Key not found in the map");
+        cout <<  "Enter the correct values please !! \n";
     }
 
     ~custom_map() {

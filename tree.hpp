@@ -174,7 +174,7 @@ vector<tuple<int, time_t, string>> history() {
             child.push_back(new_child);
             active_version->set_children(child);
             total_versions++;
-            version_map.insert_key({total_versions, new_child});  // Changed from [] to insert_key
+            version_map.insert_key({total_versions, new_child});  
             active_version = new_child;
             return current_time;
         }
@@ -186,7 +186,7 @@ vector<tuple<int, time_t, string>> history() {
     }
 
     ~Tree() {
-        // Fix memory leak by properly deleting all nodes
+        
         for (int i = 0; i <= total_versions; i++) {
             if (version_map.exists(i)) {
                 delete version_map.get_value(i);

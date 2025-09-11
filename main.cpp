@@ -31,9 +31,6 @@ string read_string_input() {
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    
     custom_heap<string, time_t> recent_files_heap;
     custom_heap<string, long long> biggest_trees_heap;
     
