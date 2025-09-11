@@ -84,19 +84,28 @@ public:
 
     // ...existing insert() and update() methods remain the same...
     time_t set_snapshot(string message) {
+        if (active_version->snapshot_status()) {
+            cout << "This version is already a snapshot!\n";
+            return -1;
+        }
         time_t current_time = time(NULL);
         active_version->set_snapshot(message, current_time);
         return current_time;
     }
     void rollback(int version_id = -1) {
         if (version_id == -1) {
+            if (active_version->get_parent() == nullptr) {
+                cout << "Already at root version!\n";
+                return;
+            }
             active_version = active_version->get_parent();
         }
         else {
-            // Changed to use get_value instead of []
-            if (version_map.exists(version_id)) {
-                active_version = version_map.get_value(version_id);
+            if (!version_map.exists(version_id)) {
+                cout << "Invalid version ID!\n";
+                return;
             }
+            active_version = version_map.get_value(version_id);
         }
     }
 
@@ -177,12 +186,13 @@ vector<tuple<int, time_t, string>> history() {
     }
 
     ~Tree() {
-        // Since custom_map doesn't support range-based for loop,
-        // we'll iterate through version numbers we know exist
-        for (int i = 1; i <= total_versions + 1; i++) {
+        // Fix memory leak by properly deleting all nodes
+        for (int i = 0; i <= total_versions; i++) {
             if (version_map.exists(i)) {
                 delete version_map.get_value(i);
             }
         }
+        root = nullptr;
+        active_version = nullptr;
     }
 };

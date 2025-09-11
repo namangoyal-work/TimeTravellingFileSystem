@@ -1,3 +1,6 @@
+#ifndef CUSTOM_HASHMAP_HPP
+#define CUSTOM_HASHMAP_HPP
+
 #include <iostream>
 using namespace std;
 
@@ -154,3 +157,5 @@ public:
         delete[] buckets;
     }
 };
+
+#endif // CUSTOM_HASHMAP_HPP

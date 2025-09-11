@@ -1,10 +1,16 @@
+#ifndef CUSTOM_HEAP_HPP
+#define CUSTOM_HEAP_HPP
+
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 using namespace std;
+
 template<typename T, class C>
 class custom_heap {
 private:
     vector<pair<T, C>> ar;
+    unordered_map<T, long long> position_map; // Tracks position of each key in the heap
 
     void heapify_down(long long index) {
         long long size = ar.size();
@@ -21,22 +27,16 @@ private:
         }
         
         if (largest != index) {
-            swap(ar[index], ar[largest]);
+            swap_nodes(index, largest);
             heapify_down(largest);
         }
     }
 
-public:
-    custom_heap() {} // Empty constructor is enough
-
-    void insert(pair<T, C> p) {
-        ar.push_back(p);
-        long long index = ar.size() - 1;
-        
+    void heapify_up(long long index) {
         while (index > 0) {
             long long parent = (index - 1) / 2;
             if (ar[parent].second < ar[index].second) {
-                swap(ar[parent], ar[index]);
+                swap_nodes(parent, index);
                 index = parent;
             } else {
                 break;
@@ -44,68 +44,119 @@ public:
         }
     }
 
+    void swap_nodes(long long i, long long j) {
+        // Update position map
+        position_map[ar[i].first] = j;
+        position_map[ar[j].first] = i;
+        // Swap elements
+        swap(ar[i], ar[j]);
+    }
+
+public:
+    custom_heap() {}
+    
+    // Fix copy constructor to properly copy position_map
+    custom_heap(const custom_heap& other) {
+        ar = other.ar;
+        position_map = other.position_map;
+    }
+    
+    // Add assignment operator
+    custom_heap& operator=(const custom_heap& other) {
+        if (this != &other) {
+            ar = other.ar;
+            position_map = other.position_map;
+        }
+        return *this;
+    }
+
+    void insert(pair<T, C> p) {
+        // Check if key already exists
+        if (position_map.find(p.first) != position_map.end()) {
+            // Update existing element
+            long long pos = position_map[p.first];
+            C old_value = ar[pos].second;
+            ar[pos].second = p.second;
+            
+            // Reheapify based on whether value increased or decreased
+            if (p.second > old_value) {
+                heapify_up(pos);
+            } else if (p.second < old_value) {
+                heapify_down(pos);
+            }
+        } else {
+            // Insert new element
+            ar.push_back(p);
+            position_map[p.first] = ar.size() - 1;
+            heapify_up(ar.size() - 1);
+        }
+    }
+
     vector<pair<T, C>> search(long long k) {
         vector<pair<T, C>> result;
-        if (k == -1);{
-            k = ar.size();
-        }
-        if (ar.empty() || k <= 0) return result;
+        if (ar.empty() || k == 0) return result;
+        if (k == -1 || k > ar.size()) k = ar.size();        
+        // Create a copy of the current heap's data
+        vector<pair<T, C>> temp_ar = ar;
+        unordered_map<T, long long> temp_map = position_map;
         
-        // Limit k to array size
-        k = min(k, (long long)ar.size());
-        vector<pair<T, C>> temp = ar;
-        
-        for (long long i = 0; i < k; i++) {
-            if (temp.empty()) break;
-            
-            result.push_back(temp[0]);
-            temp[0] = temp.back();
-            temp.pop_back();
-            
-            if (!temp.empty()) {
-                // Heapify down the root
+        // Extract k largest elements
+        for (long long i = 0; i < k && !temp_ar.empty(); i++) {
+            result.push_back(temp_ar[0]);
+            temp_ar[0] = temp_ar.back();
+            temp_ar.pop_back();
+            if (!temp_ar.empty()) {
                 long long idx = 0;
-                long long size = temp.size();
-                
                 while (true) {
                     long long largest = idx;
                     long long left = 2 * idx + 1;
                     long long right = 2 * idx + 2;
                     
-                    if (left < size && temp[left].second > temp[largest].second)
+                    if (left < temp_ar.size() && temp_ar[left].second > temp_ar[largest].second)
                         largest = left;
-                    
-                    if (right < size && temp[right].second > temp[largest].second)
+                    if (right < temp_ar.size() && temp_ar[right].second > temp_ar[largest].second)
                         largest = right;
                     
                     if (largest == idx) break;
                     
-                    swap(temp[idx], temp[largest]);
+                    swap(temp_ar[idx], temp_ar[largest]);
                     idx = largest;
                 }
             }
         }
-        
         return result;
     }
 
-    void build_heap(custom_map<T, C>& mp) {
-        vector<pair<T, C>> pairs = mp.get_all_pairs();
-        ar = pairs;
-        
-        if (ar.empty()) return;
-        
-        for (long long i = (ar.size() / 2) - 1; i >= 0; i--) {
-            heapify_down(i);
+    pair<T, C> extract_max() {
+        if (ar.empty()) {
+            throw runtime_error("Heap is empty");
         }
+
+        pair<T, C> max_element = ar[0];
+        position_map.erase(max_element.first);
+
+        if (ar.size() > 1) {
+            ar[0] = ar.back();
+            position_map[ar[0].first] = 0;
+        }
+        
+        ar.pop_back();
+        
+        if (!ar.empty()) {
+            heapify_down(0);
+        }
+
+        return max_element;
     }
-    void build_heap(const vector<pair<T, C>>& pairs) {
-        ar = pairs;
-        
-        if (ar.empty()) return;
-        
-        for (long long i = (ar.size() / 2) - 1; i >= 0; i--) {
-            heapify_down(i);
-        }
+
+
+    bool empty() const {
+        return ar.empty();
+    }
+
+    long long size() const {
+        return ar.size();
     }
 };
+
+#endif // CUSTOM_HEAP_HPP
